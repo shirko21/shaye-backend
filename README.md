@@ -4,7 +4,7 @@ Backend API for SHAYE, built with Express and PostgreSQL.
 
 ## Authentication contract
 
-The frontend and backend use the same fields for registration and login.
+Registration and login only ask the user for an email address and password.
 
 ### Register
 
@@ -12,16 +12,13 @@ The frontend and backend use the same fields for registration and login.
 
 ```json
 {
-  "fullname": "Example User",
-  "username": "example_user",
   "email": "user@example.com",
-  "phone": "+989123456789",
   "password": "minimum-8-characters"
 }
 ```
 
-Required fields: `fullname`, `username`, `email`, and `password`.
-`phone` is optional. Usernames are normalized to lowercase.
+Required fields: `email` and `password`. Internal display-name and username
+values are generated automatically so they do not need to appear in the form.
 
 ### Login
 
@@ -40,5 +37,6 @@ Password hashes are never included in API responses.
 ## Current scope
 
 The frontend still stores users locally until the API-client integration phase.
-The referral code remains a frontend-only field until referral support is added
-to the backend.
+The optional referral code remains a frontend-only field until referral support
+is added to the backend. While registration is local, a non-empty code must
+match an existing user's referral code or registration is rejected.
