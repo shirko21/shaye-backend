@@ -31,9 +31,19 @@ const profile = async (req, res) => {
       });
     }
 
+    const user = result.rows[0];
+
+    if (user.status && user.status !== "active") {
+      return res.status(403).json({
+        success: false,
+        code: "ACCOUNT_INACTIVE",
+        message: "Account is not active"
+      });
+    }
+
     return res.json({
       success: true,
-      user: result.rows[0]
+      user
     });
   } catch (error) {
     console.error("Profile error:", error);
