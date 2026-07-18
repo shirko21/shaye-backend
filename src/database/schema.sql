@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+
+    fullname VARCHAR(100) NOT NULL,
+
+    username VARCHAR(50) UNIQUE NOT NULL,
+
+    email VARCHAR(150) UNIQUE,
+
+    password VARCHAR(255) NOT NULL,
+
+    phone VARCHAR(20),
+
+    balance NUMERIC(20,2) DEFAULT 0,
+
+    vip BOOLEAN DEFAULT FALSE,
+
+    is_admin BOOLEAN DEFAULT FALSE,
+
+    status VARCHAR(20) DEFAULT 'active',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
