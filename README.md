@@ -49,3 +49,14 @@ without keeping a plaintext password in browser storage.
 Authentication, session tokens, referral-code validation and password checks
 are server-backed. Existing finance, task and team screens still cache their
 prototype data locally until their dedicated API endpoints are implemented.
+
+## Hosted database configuration
+
+For Neon or another hosted PostgreSQL provider, set the complete connection
+string as the `DATABASE_URL` environment variable. Set a strong, private
+`JWT_SECRET` as a separate environment variable. The server applies the
+idempotent schema initialization before it starts listening for requests.
+
+The individual `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME`
+variables remain available as a local-development fallback. Set `DB_SSL=false`
+only when the local database does not support SSL.
