@@ -1,22 +1,23 @@
 const bcrypt = require("bcrypt");
+const crypto = require("node:crypto");
 const jwt = require("jsonwebtoken");
 
 const {
   createUser,
-  findUserByUsername,
   findUserByEmail,
   findUserByEmailForAuth
 } = require("../models/user.model");
 
-const USERNAME_PATTERN = /^[a-zA-Z0-9_.-]{3,32}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_PATTERN = /^[0-9+\s()-]{7,20}$/;
 
 const normalizeEmail = (value) =>
   String(value || "").trim().toLowerCase();
 
-const normalizeUsername = (value) =>
-  String(value || "").trim().toLowerCase();
+const createInternalFullname = (email) =>
+  email.split("@")[0].slice(0, 100) || "User";
+
+const createInternalUsername = (email) =>
+  `user_${crypto.createHash("sha256").update(email).digest("hex").slice(0, 24)}`;
 
 const publicUser = (user) => ({
   id: user.id,
@@ -34,31 +35,13 @@ const publicUser = (user) => ({
 // ثبت نام
 const register = async (req, res) => {
   try {
-    const fullname = String(req.body.fullname || "").trim();
-    const username = normalizeUsername(req.body.username);
     const email = normalizeEmail(req.body.email);
-    const phone = String(req.body.phone || "").trim();
     const password = String(req.body.password || "");
 
-    if (!fullname || !username || !email || !password) {
+    if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Full name, username, email and password are required"
-      });
-    }
-
-    if (fullname.length < 2 || fullname.length > 100) {
-      return res.status(400).json({
-        success: false,
-        message: "Full name must be between 2 and 100 characters"
-      });
-    }
-
-    if (!USERNAME_PATTERN.test(username)) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Username must be 3-32 characters and contain only letters, numbers, dot, dash or underscore"
+        message: "Email and password are required"
       });
     }
 
@@ -69,13 +52,6 @@ const register = async (req, res) => {
       });
     }
 
-    if (phone && !PHONE_PATTERN.test(phone)) {
-      return res.status(400).json({
-        success: false,
-        message: "Phone number is invalid"
-      });
-    }
-
     if (password.length < 8 || password.length > 128) {
       return res.status(400).json({
         success: false,
@@ -83,17 +59,7 @@ const register = async (req, res) => {
       });
     }
 
-    const [usernameExists, emailExists] = await Promise.all([
-      findUserByUsername(username),
-      findUserByEmail(email)
-    ]);
-
-    if (usernameExists) {
-      return res.status(409).json({
-        success: false,
-        message: "Username already exists"
-      });
-    }
+    const emailExists = await findUserByEmail(email);
 
     if (emailExists) {
       return res.status(409).json({
@@ -103,13 +69,15 @@ const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const fullname = createInternalFullname(email);
+    const username = createInternalUsername(email);
 
     const user = await createUser({
       fullname,
       username,
       email,
       password: hashedPassword,
-      phone: phone || null
+      phone: null
     });
 
     return res.status(201).json({
@@ -121,7 +89,7 @@ const register = async (req, res) => {
     if (error.code === "23505") {
       return res.status(409).json({
         success: false,
-        message: "Username or email already exists"
+        message: "Email already exists"
       });
     }
 
