@@ -2,24 +2,42 @@
 set -Eeuo pipefail
 
 REPO="/workspaces/shaye-backend"
-ZIP_NAME="SHAYE-CLEAN-CODESPACES-v1.zip"
 DEST="/workspaces/shaye-clean-v1"
-APP="$DEST/SHAYE-CLEAN-CODESPACES-v1"
 
 fail(){ echo "❌ $*" >&2; exit 1; }
 
 cd "$REPO" || fail "مخزن shaye-backend پیدا نشد."
 git switch main >/dev/null 2>&1 || true
 git pull origin main
-
-[ -f "$ZIP_NAME" ] || fail "فایل $ZIP_NAME داخل شاخه main پیدا نشد."
 command -v unzip >/dev/null 2>&1 || fail "unzip پیدا نشد."
+
+ZIP=""
+for candidate in \
+  "SHAYE-CLEAN-CODESPACES-v1.zip" \
+  "SHAYE-FINAL-RC2.zip" \
+  "✅ SHAYE-FINAL-RC2.zip"; do
+  if [ -f "$candidate" ]; then
+    ZIP="$candidate"
+    break
+  fi
+done
+
+if [ -z "$ZIP" ]; then
+  ZIP="$(find . -maxdepth 1 -type f \( -iname '*SHAYE*FINAL*RC2*.zip' -o -iname '*SHAYE*CLEAN*.zip' \) -printf '%f\n' | head -n 1)"
+fi
+
+[ -n "$ZIP" ] && [ -f "$ZIP" ] || fail "فایل ZIP پروژه در شاخه main پیدا نشد."
+echo "✅ فایل پیدا شد: $ZIP"
 
 rm -rf "$DEST"
 mkdir -p "$DEST"
-unzip -q "$ZIP_NAME" -d "$DEST"
-[ -f "$APP/START-CODESPACES.sh" ] || fail "ساختار فایل ZIP درست نیست."
-chmod +x "$APP/START-CODESPACES.sh" "$APP"/scripts/*.sh
+unzip -q "$ZIP" -d "$DEST"
+
+START="$(find "$DEST" -maxdepth 5 -type f -name 'START-CODESPACES.sh' -print -quit)"
+[ -n "$START" ] || fail "داخل ZIP فایل START-CODESPACES.sh پیدا نشد؛ احتمالاً فایل اشتباه آپلود شده است."
+APP="$(dirname "$START")"
+chmod +x "$START"
+find "$APP/scripts" -maxdepth 1 -type f -name '*.sh' -exec chmod +x {} + 2>/dev/null || true
 
 cd "$APP"
-bash START-CODESPACES.sh
+bash "$START"
