@@ -1,0 +1,41 @@
+=== SHAYE FINAL RC2 RUN ===
+UTC: 2026-07-22T18:27:01Z
+Branch: stage-9a-codespaces
+
+[1/6] دریافت فایل نهایی از شاخه main
+From https://github.com/shirko21/shaye-backend
+ * branch            main       -> FETCH_HEAD
+ * branch            stage-9a-codespaces -> FETCH_HEAD
+[2/6] نسخه قبلی در حال اجرا پیدا نشد
+[3/6] استخراج نسخه نهایی
+[4/6] بررسی کامل فایل نهایی
+[1/9] Static release rules
+✅ Static release validation passed.
+[2/9] JavaScript syntax
+[3/9] Frontend API bindings
+API bindings validated.
+[4/9] TypeScript syntax
+node:internal/modules/cjs/loader:1459
+  throw err;
+  ^
+
+Error: Cannot find module 'typescript'
+Require stack:
+- /workspaces/shaye-final-rc2/SHAYE-FINAL-RC2/[stdin]
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+    at Module._load (node:internal/modules/cjs/loader:1242:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at [stdin]:1:48
+    at runScriptInThisContext (node:internal/vm:219:10)
+    at node:internal/process/execution:451:12 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/workspaces/shaye-final-rc2/SHAYE-FINAL-RC2/[stdin]' ]
+}
+
+Node.js v24.14.0
+
+EXIT_STATUS=unknown
