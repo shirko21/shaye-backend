@@ -1,0 +1,16 @@
+
+> shaye-api@2.9.0 typecheck
+> tsc --noEmit
+
+src/controllers/user.controller.ts(9,121): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/services/sweep-signer.service.ts(74,3): error TS2322: Type 'HDNodeWallet' is not assignable to type 'Wallet'.
+  Property '#private' in type 'HDNodeWallet' refers to a different member that cannot be accessed from within type 'Wallet'.
+src/services/wallet-sweeper.service.ts(385,28): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/wallet-sweeper.service.ts(520,31): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/wallet-sweeper.service.ts(734,31): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/wallet-sweeper.service.ts(978,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/wallet-sweeper.service.ts(979,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/withdrawal-execution.service.ts(319,7): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/services/withdrawal-execution.service.ts(962,9): error TS2722: Cannot invoke an object which is possibly 'undefined'.
+src/utils/validator.ts(2,10): error TS2305: Module '"../constants"' has no exported member 'MAX_MONEY'.
