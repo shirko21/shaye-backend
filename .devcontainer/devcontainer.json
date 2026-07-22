@@ -1,0 +1,14 @@
+{
+  "name": "SHAYE Clean Codespaces",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "forwardPorts": [5000],
+  "portsAttributes": {
+    "5000": {
+      "label": "SHAYE Web App",
+      "protocol": "http",
+      "onAutoForward": "notify",
+      "visibility": "public"
+    }
+  },
+  "postCreateCommand": "chmod +x START-SHAYE-CLEAN.sh 2>/dev/null || true"
+}
