@@ -1,0 +1,10 @@
+node_modules/
+
+# Local environment files may contain database credentials and JWT secrets.
+.env
+.env.*
+!.env.example
+
+npm-debug.log*
+coverage/
+.DS_Store
